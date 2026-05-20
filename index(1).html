@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Témoignages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:          #08080F;
+    --surface:     #0E0E1A;
+    --card:        #121220;
+    --border:      #1E1E32;
+    --accent:      #8B5CF6;
+    --accent2:     #A78BFA;
+    --accent-glow: rgba(139, 92, 246, 0.2);
+    --text:        #EEEAF8;
+    --muted:       #55527A;
+    --success:     #34D399;
+
+    --skool:    #8B5CF6;
+    --lowt:     #A78BFA;
+    --b2c:      #C4B5FD;
+    --b2b:      #7C3AED;
+    --navy:     #6D28D9;
+    --celeb:    #DDD6FE;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 10%, rgba(139,92,246,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 10% 80%, rgba(109,40,217,0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+  }
+
+  .logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    background: linear-gradient(135deg, #fff 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .logo span {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    -webkit-text-fill-color: var(--muted);
+  }
+
+  .nav {
+    flex: 1;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-section {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 12px 12px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--muted);
+    transition: all 0.15s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+  .nav-item:hover { background: var(--card); color: var(--text); }
+  .nav-item.active {
+    background: rgba(139, 92, 246, 0.12);
+    color: var(--accent2);
+    font-weight: 500;
+  }
+  .nav-item .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-scan {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, var(--accent) 0%, #6D28D9 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: 0 4px 16px var(--accent-glow);
+  }
+  .btn-scan:hover { opacity: 0.85; }
+  .btn-scan:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: 220px;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    padding: 24px 32px 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .page-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .page-title span { color: var(--accent2); }
+
+  .btn-add {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, var(--accent) 0%, #6D28D9 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px var(--accent-glow);
+  }
+  .btn-add:hover { transform: translateY(-1px); box-shadow: 0 8px 28px var(--accent-glow); }
+
+  /* ── FILTERS ── */
+  .filters {
+    padding: 20px 32px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 320px;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+  }
+  .search-input {
+    width: 100%;
+    padding: 9px 12px 9px 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--muted); }
+
+  select.filter-select {
+    padding: 9px 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    appearance: none;
+    padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6880' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  select.filter-select:focus { border-color: var(--accent); }
+
+  .count-badge {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .count-badge strong { color: var(--text); }
+
+  /* ── STATS BAR ── */
+  .stats {
+    padding: 0 32px 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    font-size: 12px;
+  }
+  .stat-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .stat-chip strong { font-size: 14px; font-weight: 600; }
+
+  /* ── GRID ── */
+  .grid {
+    padding: 0 32px 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .card:hover {
+    border-color: rgba(233,69,96,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .avatar {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .card-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .badge {
+    padding: 3px 8px;
+    border-radius: 50px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+  .badge-type   { background: rgba(139,92,246,0.15); color: var(--accent2); }
+  .badge-video  { background: rgba(139,92,246,0.10); color: var(--accent); }
+  .badge-ecrit  { background: rgba(52,211,153,0.12); color: var(--success); }
+
+  .card-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .card-produit {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .card-resultats {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--success);
+    margin: 10px 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .card-details {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-date { font-size: 11px; color: var(--muted); }
+
+  .card-links { display: flex; gap: 8px; }
+  .link-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .link-btn:hover { opacity: 0.8; }
+  .link-btn-video  { background: rgba(139,92,246,0.12); color: var(--accent2); }
+  .link-btn-screen { background: rgba(52,211,153,0.12); color: var(--success); }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--muted);
+  }
+  .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty h3 { font-family: 'Syne', sans-serif; color: var(--text); margin-bottom: 8px; }
+
+  /* ── LOADER ── */
+  .loader-wrap {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px;
+    gap: 16px;
+    color: var(--muted);
+  }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── MODAL (Ajout témoignage) ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 32px;
+    position: relative;
+  }
+
+  .modal-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .modal-title span { color: var(--accent2); }
+
+  .modal-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 32px; height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 18px;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--text); }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    padding: 10px 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus { border-color: var(--accent); }
+  .form-textarea { resize: vertical; min-height: 80px; }
+  .form-select { appearance: none; cursor: pointer; }
+
+  .form-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .btn-cancel {
+    padding: 10px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .btn-cancel:hover { color: var(--text); }
+
+  .btn-submit {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, var(--accent) 0%, #6D28D9 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    box-shadow: 0 4px 14px var(--accent-glow);
+  }
+  .btn-submit:hover { opacity: 0.85; }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-width: 320px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { background: #1A2E28; border: 1px solid var(--success); color: var(--success); }
+  .toast.error   { background: #1E1030; border: 1px solid var(--accent); color: var(--accent2); }
+  .toast.info    { background: #1A1030; border: 1px solid var(--accent2); color: var(--accent2); }
+
+  /* ── PRODUIT COLORS ── */
+  .prod-skool  { color: var(--skool); }
+  .prod-lowt   { color: var(--lowt); }
+  .prod-b2c    { color: var(--b2c); }
+  .prod-b2b    { color: var(--b2b); }
+  .prod-navy   { color: var(--navy); }
+  .prod-celeb  { color: var(--celeb); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <h1>Social Proof<br>Dashboard</h1>
+    <span>Témoignages</span>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-section">Produits</div>
+    <button class="nav-item active" onclick="filtrerProduit('Tous', this)">
+      <span class="dot" style="background:var(--accent)"></span> Tous les produits
+    </button>
+    <button class="nav-item" onclick="filtrerProduit('Reframe Skool Gratuit', this)">
+      <span class="dot" style="background:var(--skool)"></span> Reframe Skool
+    </button>
+    <button class="nav-item" onclick="filtrerProduit('Reframe Low Ticket', this)">
+      <span class="dot" style="background:var(--lowt)"></span> Low Ticket
+    </button>
+    <button class="nav-item" onclick="filtrerProduit('Reframe B2C', this)">
+      <span class="dot" style="background:var(--b2c)"></span> Reframe B2C
+    </button>
+    <button class="nav-item" onclick="filtrerProduit('Reframe B2B', this)">
+      <span class="dot" style="background:var(--b2b)"></span> Reframe B2B
+    </button>
+    <button class="nav-item" onclick="filtrerProduit('Navy Sales', this)">
+      <span class="dot" style="background:var(--navy)"></span> Navy Sales
+    </button>
+    <button class="nav-item" onclick="filtrerProduit('Célébrités', this)">
+      <span class="dot" style="background:var(--celeb)"></span> Célébrités
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="btn-scan" id="btnScan" onclick="lancerScan()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M23 4v6h-6M1 20v-6h6"/>
+        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+      </svg>
+      Scanner Drive
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Témoignages <span id="titleProduit"></span></div>
+    </div>
+    <button class="btn-add" onclick="ouvrirModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Ajouter un témoignage
+    </button>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats" id="statsBar"></div>
+
+  <!-- FILTRES -->
+  <div class="filters">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input class="search-input" id="searchInput" type="text"
+             placeholder="Rechercher un prénom, résultat..."
+             oninput="debounceSearch()">
+    </div>
+
+    <select class="filter-select" id="filterType" onchange="charger()">
+      <option value="Tous">Tous les types</option>
+      <option>Mindset</option>
+      <option>Chiffres</option>
+      <option>Liberté</option>
+      <option>Perso</option>
+      <option>Transformation</option>
+      <option>Rapidité</option>
+      <option>Avant/Après</option>
+      <option>Autre</option>
+    </select>
+
+    <select class="filter-select" id="filterFormat" onchange="charger()">
+      <option value="Tous">Tous les formats</option>
+      <option>Vidéo</option>
+      <option>Écrit</option>
+    </select>
+
+    <span class="count-badge" id="countBadge"></span>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid" id="grid">
+    <div class="loader-wrap"><div class="spinner"></div><span>Chargement...</span></div>
+  </div>
+</main>
+
+<!-- MODAL AJOUT -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="fermerModal()">×</button>
+    <div class="modal-title">Nouveau <span>témoignage</span></div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Prénom *</label>
+        <input class="form-input" id="f_prenom" type="text" placeholder="Marie">
+      </div>
+      <div class="form-group">
+        <label>Produit *</label>
+        <select class="form-select" id="f_produit">
+          <option value="">— Choisir —</option>
+          <option>Reframe Skool Gratuit</option>
+          <option>Reframe Low Ticket</option>
+          <option>Reframe B2C</option>
+          <option>Reframe B2B</option>
+          <option>Navy Sales</option>
+          <option>Célébrités</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Type *</label>
+        <select class="form-select" id="f_type">
+          <option value="">— Choisir —</option>
+          <option>Mindset</option>
+          <option>Chiffres</option>
+          <option>Liberté</option>
+          <option>Perso</option>
+          <option>Transformation</option>
+          <option>Rapidité</option>
+          <option>Avant/Après</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Format *</label>
+        <select class="form-select" id="f_format">
+          <option value="">— Choisir —</option>
+          <option>Vidéo</option>
+          <option>Écrit</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>Lien vidéo</label>
+        <input class="form-input" id="f_lienVideo" type="url" placeholder="https://...">
+      </div>
+      <div class="form-group full">
+        <label>Lien screenshot (Drive)</label>
+        <input class="form-input" id="f_lienScreen" type="url" placeholder="https://drive.google.com/...">
+      </div>
+      <div class="form-group full">
+        <label>Résultats</label>
+        <input class="form-input" id="f_resultats" type="text" placeholder="Ex: +12k€ en 3 mois">
+      </div>
+      <div class="form-group full">
+        <label>Détails / Citation</label>
+        <textarea class="form-textarea" id="f_details" placeholder="Contexte, histoire, citation marquante..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Ajouté par</label>
+        <input class="form-input" id="f_ajoutePar" type="text" placeholder="Ton prénom ou initiales">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="fermerModal()">Annuler</button>
+      <button class="btn-submit" id="btnSubmit" onclick="soumettre()">
+        Ajouter le témoignage
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── CONFIG
+  const SHEET_ID   = '1ekxbGF2YhjdQLyM0Fidcn4sWMmPIXClPO5vEtMR8QNs';
+  const SHEET_NAME = encodeURIComponent('🗂️ TOUS');
+  const SHEET_URL  = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=' + SHEET_NAME;
+
+  // ── ÉTAT
+  let filtreProduit  = 'Tous';
+  let debounceTimer  = null;
+  let tousLesDonnees = []; // cache local
+
+  const PRODUIT_COLORS = {
+    'Reframe Skool Gratuit': '#8B5CF6',
+    'Reframe Low Ticket'   : '#A78BFA',
+    'Reframe B2C'          : '#C4B5FD',
+    'Reframe B2B'          : '#7C3AED',
+    'Navy Sales'           : '#6D28D9',
+    'Célébrités'           : '#DDD6FE',
+  };
+
+  // ── INIT
+  window.onload = () => charger();
+
+  function filtrerProduit(produit, el) {
+    filtreProduit = produit;
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('titleProduit').textContent = produit === 'Tous' ? '' : produit;
+    afficherFiltres(); // filtrage local, pas de rechargement
+  }
+
+  function debounceSearch() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(afficherFiltres, 200);
+  }
+
+  // ── CHARGEMENT DEPUIS L'API SHEETS (rapide)
+  function charger() {
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '<div class="loader-wrap"><div class="spinner"></div><span>Chargement...</span></div>';
+
+    fetch(SHEET_URL)
+      .then(r => r.text())
+      .then(text => {
+        // L'API retourne du JSONP : google.visualization.Query.setResponse({...})
+        const json = JSON.parse(text.replace(/^[^(]+\(/, '').replace(/\);?\s*$/, ''));
+        const rows = json.table.rows || [];
+
+        tousLesDonnees = rows
+          .map(r => ({
+            prenom    : cellVal(r, 0),
+            produit   : cellVal(r, 1),
+            type      : cellVal(r, 2),
+            format    : cellVal(r, 3),
+            lienVideo : cellVal(r, 4),
+            lienScreen: cellVal(r, 5),
+            resultats : cellVal(r, 6),
+            details   : cellVal(r, 7),
+            date      : cellVal(r, 8),
+            ajoutePar : cellVal(r, 9),
+          }))
+          .filter(t => t.prenom && t.prenom.trim() !== '');
+
+        afficherFiltres();
+      })
+      .catch(err => {
+        grid.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><h3>Erreur de chargement</h3><p>' + err.message + '</p></div>';
+      });
+  }
+
+  function cellVal(row, idx) {
+    if (!row.c || !row.c[idx] || row.c[idx].v === null) return '';
+    return String(row.c[idx].v).trim();
+  }
+
+  // ── FILTRAGE LOCAL (instantané)
+  function afficherFiltres() {
+    const type   = document.getElementById('filterType').value;
+    const format = document.getElementById('filterFormat').value;
+    const search = document.getElementById('searchInput').value.trim().toLowerCase();
+
+    let resultats = tousLesDonnees;
+
+    if (filtreProduit !== 'Tous')
+      resultats = resultats.filter(t => t.produit === filtreProduit);
+    if (type !== 'Tous')
+      resultats = resultats.filter(t => t.type === type);
+    if (format !== 'Tous')
+      resultats = resultats.filter(t => t.format === format);
+    if (search)
+      resultats = resultats.filter(t =>
+        t.prenom.toLowerCase().includes(search) ||
+        t.details.toLowerCase().includes(search) ||
+        t.resultats.toLowerCase().includes(search)
+      );
+
+    rendu({ temoignages: resultats, total: resultats.length });
+  }
+
+  // ── RENDU
+  function rendu(data) {
+    const grid = document.getElementById('grid');
+    const { temoignages, total } = data;
+
+    document.getElementById('countBadge').innerHTML =
+      `<strong>${total}</strong> témoignage${total > 1 ? 's' : ''}`;
+
+    afficherStats(temoignages);
+
+    if (!temoignages || temoignages.length === 0) {
+      grid.innerHTML = `<div class="empty">
+        <div class="empty-icon">🔍</div>
+        <h3>Aucun témoignage trouvé</h3>
+        <p>Essaie de modifier les filtres ou ajoute un nouveau témoignage.</p>
+      </div>`;
+      return;
+    }
+
+    grid.innerHTML = temoignages.map(t => carteHTML(t)).join('');
+  }
+
+  function afficherStats(temoignages) {
+    const bar = document.getElementById('statsBar');
+    if (!temoignages || temoignages.length === 0) { bar.innerHTML = ''; return; }
+
+    const nbVideo = temoignages.filter(t => t.format === 'Vidéo').length;
+    const nbEcrit = temoignages.filter(t => t.format === 'Écrit').length;
+    const types   = {};
+    temoignages.forEach(t => { if(t.type) types[t.type] = (types[t.type]||0)+1; });
+    const topType = Object.entries(types).sort((a,b)=>b[1]-a[1])[0];
+
+    bar.innerHTML = `
+      <div class="stat-chip"><span class="dot" style="background:#8B5CF6"></span><strong>${temoignages.length}</strong> total</div>
+      <div class="stat-chip"><span class="dot" style="background:#8B5CF6"></span><strong>${nbVideo}</strong> vidéos</div>
+      <div class="stat-chip"><span class="dot" style="background:#34D399"></span><strong>${nbEcrit}</strong> écrits</div>
+      ${topType ? `<div class="stat-chip"><span class="dot" style="background:#A78BFA"></span><strong>${topType[1]}</strong> ${topType[0]}</div>` : ''}
+    `;
+  }
+
+  function carteHTML(t) {
+    const color    = PRODUIT_COLORS[t.produit] || '#8B5CF6';
+    const initiale = t.prenom ? t.prenom.charAt(0).toUpperCase() : '?';
+    const lienV    = t.lienVideo  ? `<a class="link-btn link-btn-video" href="${t.lienVideo}" target="_blank">▶ Vidéo</a>` : '';
+    const lienS    = t.lienScreen ? `<a class="link-btn link-btn-screen" href="${t.lienScreen}" target="_blank">🖼 Screen</a>` : '';
+    const badgeF   = t.format === 'Vidéo'
+      ? '<span class="badge badge-video">Vidéo</span>'
+      : '<span class="badge badge-ecrit">Écrit</span>';
+    const badgeT   = t.type ? `<span class="badge badge-type">${t.type}</span>` : '';
+
+    return `<div class="card">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${color};border-radius:14px 14px 0 0"></div>
+      <div class="card-header">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="avatar" style="background:${color}22;color:${color}">${initiale}</div>
+          <div>
+            <div class="card-name">${t.prenom || '—'}</div>
+            <div class="card-produit" style="color:${color}">${t.produit || ''}</div>
+          </div>
+        </div>
+        <div class="card-badges">${badgeF}${badgeT}</div>
+      </div>
+      ${t.resultats ? `<div class="card-resultats">✦ ${t.resultats}</div>` : ''}
+      ${t.details   ? `<div class="card-details">"${t.details}"</div>` : ''}
+      <div class="card-footer">
+        <span class="card-date">${t.date || ''}</span>
+        <div class="card-links">${lienV}${lienS}</div>
+      </div>
+    </div>`;
+  }
+
+  // ── MODAL
+  function ouvrirModal() {
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+  function fermerModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    ['f_prenom','f_produit','f_type','f_format','f_lienVideo',
+     'f_lienScreen','f_resultats','f_details','f_ajoutePar']
+      .forEach(id => { document.getElementById(id).value = ''; });
+  }
+
+  function soumettre() {
+    const prenom  = document.getElementById('f_prenom').value.trim();
+    const produit = document.getElementById('f_produit').value;
+    const type    = document.getElementById('f_type').value;
+    const format  = document.getElementById('f_format').value;
+
+    if (!prenom || !produit || !type || !format) {
+      toast('Remplis les champs obligatoires (Prénom, Produit, Type, Format)', 'error');
+      return;
+    }
+
+    const data = {
+      prenom, produit, type, format,
+      lienVideo  : document.getElementById('f_lienVideo').value.trim(),
+      lienScreen : document.getElementById('f_lienScreen').value.trim(),
+      resultats  : document.getElementById('f_resultats').value.trim(),
+      details    : document.getElementById('f_details').value.trim(),
+      ajoutePar  : document.getElementById('f_ajoutePar').value.trim() || 'App Web',
+    };
+
+    const btn = document.getElementById('btnSubmit');
+    btn.disabled    = true;
+    btn.textContent = 'Enregistrement...';
+
+    google.script.run
+      .withSuccessHandler(() => {
+        fermerModal();
+        btn.disabled    = false;
+        btn.textContent = 'Ajouter le témoignage';
+        toast(`✓ Témoignage de ${prenom} ajouté !`, 'success');
+        setTimeout(charger, 1500); // petit délai pour que le sheet soit à jour
+      })
+      .withFailureHandler(err => {
+        btn.disabled    = false;
+        btn.textContent = 'Ajouter le témoignage';
+        toast('Erreur : ' + err.message, 'error');
+      })
+      .addTemoignage(data);
+  }
+
+  // ── SCAN DRIVE
+  function lancerScan() {
+    const btn = document.getElementById('btnScan');
+    btn.disabled  = true;
+    btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px"></div> Scan...';
+
+    google.script.run
+      .withSuccessHandler(res => {
+        btn.disabled  = false;
+        btn.innerHTML = '🔄 Scanner Drive';
+        if (res.erreurs && res.erreurs.length > 0) {
+          toast('⚠️ Config manquante pour certains dossiers', 'error');
+        } else if (res.total === 0) {
+          toast('Aucun nouveau fichier détecté', 'info');
+        } else {
+          toast(`✓ ${res.total} nouveau(x) témoignage(s) importé(s) !`, 'success');
+          setTimeout(charger, 1500);
+        }
+      })
+      .withFailureHandler(err => {
+        btn.disabled  = false;
+        btn.innerHTML = '🔄 Scanner Drive';
+        toast('Erreur scan : ' + err.message, 'error');
+      })
+      .scannerDrive();
+  }
+
+  // ── TOAST
+  function toast(msg, type = 'success') {
+    const el   = document.getElementById('toast');
+    el.textContent = msg;
+    el.className   = `toast ${type} show`;
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('show'), 3500);
+  }
+</script>
+</body>
+</html>
