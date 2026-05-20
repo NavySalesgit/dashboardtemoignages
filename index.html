@@ -987,7 +987,7 @@
       .then(text => {
         const json = JSON.parse(text.replace(/^[^(]+\(/, '').replace(/\);\s*$/, ''));
         const rows = json.table.rows || [];
-        donneesNurt = rows.map(r => ({
+        donneesNurt = rows.slice(2).map(r => ({
           titre      : cellVal(r, 0),
           type       : cellVal(r, 1),
           theme      : cellVal(r, 2),
