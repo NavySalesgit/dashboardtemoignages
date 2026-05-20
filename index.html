@@ -603,32 +603,70 @@
 <aside class="sidebar">
   <div class="logo">
     <h1>Social Proof<br>Dashboard</h1>
-    <span>Témoignages</span>
+    <span>Contenu & Témoignages</span>
   </div>
 
   <nav class="nav">
-    <div class="nav-section">Produits</div>
-    <button class="nav-item active" onclick="filtrerProduit('Tous', this)">
-      <span class="dot" style="background:var(--accent)"></span> Tous les produits
+    <!-- Section switcher -->
+    <div class="nav-section">Section</div>
+    <button class="nav-item active" id="btnSectionTemo" onclick="switchSection('temoignages', this)">
+      <span style="font-size:14px">🏆</span> Témoignages
     </button>
-    <button class="nav-item" onclick="filtrerProduit('Reframe Skool Gratuit', this)">
-      <span class="dot" style="background:var(--skool)"></span> Reframe Skool
+    <button class="nav-item" id="btnSectionNurt" onclick="switchSection('nurturing', this)">
+      <span style="font-size:14px">📚</span> Nurturing
     </button>
-    <button class="nav-item" onclick="filtrerProduit('Reframe Low Ticket', this)">
-      <span class="dot" style="background:var(--lowt)"></span> Low Ticket
-    </button>
-    <button class="nav-item" onclick="filtrerProduit('Reframe B2C', this)">
-      <span class="dot" style="background:var(--b2c)"></span> Reframe B2C
-    </button>
-    <button class="nav-item" onclick="filtrerProduit('Reframe B2B', this)">
-      <span class="dot" style="background:var(--b2b)"></span> Reframe B2B
-    </button>
-    <button class="nav-item" onclick="filtrerProduit('Navy Sales', this)">
-      <span class="dot" style="background:var(--navy)"></span> Navy Sales
-    </button>
-    <button class="nav-item" onclick="filtrerProduit('Célébrités', this)">
-      <span class="dot" style="background:var(--celeb)"></span> Célébrités
-    </button>
+
+    <!-- Produits (temoignages) -->
+    <div class="nav-section" id="navProduits">Produits</div>
+    <div id="navListeProduits">
+      <button class="nav-item active" onclick="filtrerProduit('Tous', this)">
+        <span class="dot" style="background:var(--accent)"></span> Tous les produits
+      </button>
+      <button class="nav-item" onclick="filtrerProduit('Reframe Skool Gratuit', this)">
+        <span class="dot" style="background:var(--skool)"></span> Reframe Skool
+      </button>
+      <button class="nav-item" onclick="filtrerProduit('Reframe Low Ticket', this)">
+        <span class="dot" style="background:var(--lowt)"></span> Low Ticket
+      </button>
+      <button class="nav-item" onclick="filtrerProduit('Reframe B2C', this)">
+        <span class="dot" style="background:var(--b2c)"></span> Reframe B2C
+      </button>
+      <button class="nav-item" onclick="filtrerProduit('Reframe B2B', this)">
+        <span class="dot" style="background:var(--b2b)"></span> Reframe B2B
+      </button>
+      <button class="nav-item" onclick="filtrerProduit('Navy Sales', this)">
+        <span class="dot" style="background:var(--navy)"></span> Navy Sales
+      </button>
+      <button class="nav-item" onclick="filtrerProduit('Célébrités', this)">
+        <span class="dot" style="background:var(--celeb)"></span> Célébrités
+      </button>
+    </div>
+
+    <!-- Programmes (nurturing) -->
+    <div class="nav-section" id="navProgrammes" style="display:none">Programmes</div>
+    <div id="navListeProgrammes" style="display:none">
+      <button class="nav-item" onclick="filtrerProgramme('Tous', this)">
+        <span class="dot" style="background:var(--accent)"></span> Tous les programmes
+      </button>
+      <button class="nav-item" onclick="filtrerProgramme('Reframe Skool Gratuit', this)">
+        <span class="dot" style="background:var(--skool)"></span> Reframe Skool
+      </button>
+      <button class="nav-item" onclick="filtrerProgramme('Reframe Low Ticket', this)">
+        <span class="dot" style="background:var(--lowt)"></span> Low Ticket
+      </button>
+      <button class="nav-item" onclick="filtrerProgramme('Reframe B2C', this)">
+        <span class="dot" style="background:var(--b2c)"></span> Reframe B2C
+      </button>
+      <button class="nav-item" onclick="filtrerProgramme('Reframe B2B', this)">
+        <span class="dot" style="background:var(--b2b)"></span> Reframe B2B
+      </button>
+      <button class="nav-item" onclick="filtrerProgramme('Navy Sales', this)">
+        <span class="dot" style="background:var(--navy)"></span> Navy Sales
+      </button>
+      <button class="nav-item" onclick="filtrerProgramme('Célébrités', this)">
+        <span class="dot" style="background:var(--celeb)"></span> Célébrités
+      </button>
+    </div>
   </nav>
 
   <div class="sidebar-footer">
@@ -646,21 +684,21 @@
 <main class="main">
   <div class="topbar">
     <div>
-      <div class="page-title">Témoignages <span id="titleProduit"></span></div>
+      <div class="page-title" id="pageTitle">Témoignages <span id="titleProduit"></span></div>
     </div>
-    <button class="btn-add" onclick="ouvrirModal()">
+    <button class="btn-add" id="btnAdd" onclick="ouvrirModal()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
       </svg>
-      Ajouter un témoignage
+      <span id="btnAddLabel">Ajouter un témoignage</span>
     </button>
   </div>
 
   <!-- STATS -->
   <div class="stats" id="statsBar"></div>
 
-  <!-- FILTRES -->
-  <div class="filters">
+  <!-- FILTRES TÉMOIGNAGES -->
+  <div class="filters" id="filtersTemo">
     <div class="search-wrap">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -669,26 +707,35 @@
              placeholder="Rechercher un prénom, résultat..."
              oninput="debounceSearch()">
     </div>
-
-    <select class="filter-select" id="filterType" onchange="charger()">
+    <select class="filter-select" id="filterType" onchange="afficherFiltres()">
       <option value="Tous">Tous les types</option>
-      <option>Mindset</option>
-      <option>Chiffres</option>
-      <option>Liberté</option>
-      <option>Perso</option>
-      <option>Transformation</option>
-      <option>Rapidité</option>
-      <option>Avant/Après</option>
-      <option>Autre</option>
+      <option>Mindset</option><option>Chiffres</option><option>Liberté</option>
+      <option>Perso</option><option>Transformation</option><option>Rapidité</option>
+      <option>Avant/Après</option><option>Autre</option>
     </select>
-
-    <select class="filter-select" id="filterFormat" onchange="charger()">
+    <select class="filter-select" id="filterFormat" onchange="afficherFiltres()">
       <option value="Tous">Tous les formats</option>
-      <option>Vidéo</option>
-      <option>Écrit</option>
+      <option>Vidéo</option><option>Écrit</option>
     </select>
-
     <span class="count-badge" id="countBadge"></span>
+  </div>
+
+  <!-- FILTRES NURTURING -->
+  <div class="filters" id="filtersNurt" style="display:none">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input class="search-input" id="searchNurt" type="text"
+             placeholder="Rechercher un titre, thème..."
+             oninput="debounceSearchNurt()">
+    </div>
+    <select class="filter-select" id="filterTypeNurt" onchange="afficherFiltresNurt()">
+      <option value="Tous">Tous les types</option>
+      <option>Podcast</option><option>YouTube</option><option>Article</option>
+      <option>Vidéo</option><option>Autre</option>
+    </select>
+    <span class="count-badge" id="countBadgeNurt"></span>
   </div>
 
   <!-- GRID -->
@@ -697,12 +744,11 @@
   </div>
 </main>
 
-<!-- MODAL AJOUT -->
+<!-- MODAL AJOUT TÉMOIGNAGE -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <button class="modal-close" onclick="fermerModal()">×</button>
     <div class="modal-title">Nouveau <span>témoignage</span></div>
-
     <div class="form-grid">
       <div class="form-group">
         <label>Prénom *</label>
@@ -712,34 +758,25 @@
         <label>Produit *</label>
         <select class="form-select" id="f_produit">
           <option value="">— Choisir —</option>
-          <option>Reframe Skool Gratuit</option>
-          <option>Reframe Low Ticket</option>
-          <option>Reframe B2C</option>
-          <option>Reframe B2B</option>
-          <option>Navy Sales</option>
-          <option>Célébrités</option>
+          <option>Reframe Skool Gratuit</option><option>Reframe Low Ticket</option>
+          <option>Reframe B2C</option><option>Reframe B2B</option>
+          <option>Navy Sales</option><option>Célébrités</option>
         </select>
       </div>
       <div class="form-group">
         <label>Type *</label>
         <select class="form-select" id="f_type">
           <option value="">— Choisir —</option>
-          <option>Mindset</option>
-          <option>Chiffres</option>
-          <option>Liberté</option>
-          <option>Perso</option>
-          <option>Transformation</option>
-          <option>Rapidité</option>
-          <option>Avant/Après</option>
-          <option>Autre</option>
+          <option>Mindset</option><option>Chiffres</option><option>Liberté</option>
+          <option>Perso</option><option>Transformation</option><option>Rapidité</option>
+          <option>Avant/Après</option><option>Autre</option>
         </select>
       </div>
       <div class="form-group">
         <label>Format *</label>
         <select class="form-select" id="f_format">
           <option value="">— Choisir —</option>
-          <option>Vidéo</option>
-          <option>Écrit</option>
+          <option>Vidéo</option><option>Écrit</option>
         </select>
       </div>
       <div class="form-group full">
@@ -763,12 +800,9 @@
         <input class="form-input" id="f_ajoutePar" type="text" placeholder="Ton prénom ou initiales">
       </div>
     </div>
-
     <div class="form-actions">
       <button class="btn-cancel" onclick="fermerModal()">Annuler</button>
-      <button class="btn-submit" id="btnSubmit" onclick="soumettre()">
-        Ajouter le témoignage
-      </button>
+      <button class="btn-submit" id="btnSubmit" onclick="soumettre()">Ajouter le témoignage</button>
     </div>
   </div>
 </div>
@@ -777,15 +811,16 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  // ── CONFIG
-  const SHEET_ID   = '1ekxbGF2YhjdQLyM0Fidcn4sWMmPIXClPO5vEtMR8QNs';
-  const SHEET_NAME = encodeURIComponent('🗂️ TOUS');
-  const SHEET_URL  = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=' + SHEET_NAME;
+  const SHEET_ID        = '1ekxbGF2YhjdQLyM0Fidcn4sWMmPIXClPO5vEtMR8QNs';
+  const SHEET_URL_TEMO  = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent('🗂️ TOUS');
+  const SHEET_URL_NURT  = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent('📚 Nurturing');
 
-  // ── ÉTAT
+  let section        = 'temoignages';
   let filtreProduit  = 'Tous';
+  let filtreProgramme = 'Tous';
   let debounceTimer  = null;
-  let tousLesDonnees = []; // cache local
+  let tousLesDonnees = [];
+  let donneesNurt    = [];
 
   const PRODUIT_COLORS = {
     'Reframe Skool Gratuit': '#8B5CF6',
@@ -796,15 +831,83 @@
     'Célébrités'           : '#DDD6FE',
   };
 
-  // ── INIT
-  window.onload = () => charger();
+  const TYPE_NURT_ICONS = {
+    'Podcast'  : '🎙️',
+    'YouTube'  : '▶️',
+    'Article'  : '📝',
+    'Vidéo'    : '🎬',
+    'Autre'    : '📌',
+  };
+
+  window.onload = () => {
+    chargerTemoignages();
+    chargerNurturing();
+  };
+
+  // ── SWITCH SECTION
+  function switchSection(sec, el) {
+    section = sec;
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+
+    if (sec === 'temoignages') {
+      document.getElementById('navProduits').style.display = '';
+      document.getElementById('navListeProduits').style.display = '';
+      document.getElementById('navProgrammes').style.display = 'none';
+      document.getElementById('navListeProgrammes').style.display = 'none';
+      document.getElementById('filtersTemo').style.display = '';
+      document.getElementById('filtersNurt').style.display = 'none';
+      document.getElementById('pageTitle').innerHTML = 'Témoignages <span id="titleProduit"></span>';
+      document.getElementById('btnAddLabel').textContent = 'Ajouter un témoignage';
+      document.getElementById('btnScan').style.display = '';
+      afficherFiltres();
+    } else {
+      document.getElementById('navProduits').style.display = 'none';
+      document.getElementById('navListeProduits').style.display = 'none';
+      document.getElementById('navProgrammes').style.display = '';
+      document.getElementById('navListeProgrammes').style.display = '';
+      document.getElementById('filtersTemo').style.display = 'none';
+      document.getElementById('filtersNurt').style.display = '';
+      document.getElementById('pageTitle').innerHTML = '📚 Nurturing';
+      document.getElementById('btnAddLabel').textContent = 'Ajouter un contenu';
+      document.getElementById('btnScan').style.display = 'none';
+      // Activer "Tous" dans la liste nurturing
+      document.querySelector('#navListeProgrammes .nav-item').classList.add('active');
+      afficherFiltresNurt();
+    }
+  }
+
+  // ── TÉMOIGNAGES
+  function chargerTemoignages() {
+    fetch(SHEET_URL_TEMO)
+      .then(r => r.text())
+      .then(text => {
+        const json = JSON.parse(text.replace(/^[^(]+\(/, '').replace(/\);\s*$/, ''));
+        const rows = json.table.rows || [];
+        tousLesDonnees = rows.map(r => ({
+          prenom    : cellVal(r, 0),
+          produit   : cellVal(r, 1),
+          type      : cellVal(r, 2),
+          format    : cellVal(r, 3),
+          lienVideo : cellVal(r, 4),
+          lienScreen: cellVal(r, 5),
+          resultats : cellVal(r, 6),
+          details   : cellVal(r, 7),
+          date      : cellVal(r, 8),
+          ajoutePar : cellVal(r, 9),
+        })).filter(t => t.prenom && t.prenom.trim() !== '');
+        if (section === 'temoignages') afficherFiltres();
+      })
+      .catch(err => {
+        document.getElementById('grid').innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><h3>Erreur</h3><p>' + err.message + '</p></div>';
+      });
+  }
 
   function filtrerProduit(produit, el) {
     filtreProduit = produit;
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#navListeProduits .nav-item').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
-    document.getElementById('titleProduit').textContent = produit === 'Tous' ? '' : produit;
-    afficherFiltres(); // filtrage local, pas de rechargement
+    afficherFiltres();
   }
 
   function debounceSearch() {
@@ -812,138 +915,166 @@
     debounceTimer = setTimeout(afficherFiltres, 200);
   }
 
-  // ── CHARGEMENT DEPUIS L'API SHEETS (rapide)
-  function charger() {
-    const grid = document.getElementById('grid');
-    grid.innerHTML = '<div class="loader-wrap"><div class="spinner"></div><span>Chargement...</span></div>';
-
-    fetch(SHEET_URL)
-      .then(r => r.text())
-      .then(text => {
-        // L'API retourne du JSONP : google.visualization.Query.setResponse({...})
-        const json = JSON.parse(text.replace(/^[^(]+\(/, '').replace(/\);?\s*$/, ''));
-        const rows = json.table.rows || [];
-
-        tousLesDonnees = rows
-          .map(r => ({
-            prenom    : cellVal(r, 0),
-            produit   : cellVal(r, 1),
-            type      : cellVal(r, 2),
-            format    : cellVal(r, 3),
-            lienVideo : cellVal(r, 4),
-            lienScreen: cellVal(r, 5),
-            resultats : cellVal(r, 6),
-            details   : cellVal(r, 7),
-            date      : cellVal(r, 8),
-            ajoutePar : cellVal(r, 9),
-          }))
-          .filter(t => t.prenom && t.prenom.trim() !== '');
-
-        afficherFiltres();
-      })
-      .catch(err => {
-        grid.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><h3>Erreur de chargement</h3><p>' + err.message + '</p></div>';
-      });
-  }
-
-  function cellVal(row, idx) {
-    if (!row.c || !row.c[idx] || row.c[idx].v === null) return '';
-    return String(row.c[idx].v).trim();
-  }
-
-  // ── FILTRAGE LOCAL (instantané)
   function afficherFiltres() {
     const type   = document.getElementById('filterType').value;
     const format = document.getElementById('filterFormat').value;
     const search = document.getElementById('searchInput').value.trim().toLowerCase();
-
-    let resultats = tousLesDonnees;
-
-    if (filtreProduit !== 'Tous')
-      resultats = resultats.filter(t => t.produit === filtreProduit);
-    if (type !== 'Tous')
-      resultats = resultats.filter(t => t.type === type);
-    if (format !== 'Tous')
-      resultats = resultats.filter(t => t.format === format);
-    if (search)
-      resultats = resultats.filter(t =>
-        t.prenom.toLowerCase().includes(search) ||
-        t.details.toLowerCase().includes(search) ||
-        t.resultats.toLowerCase().includes(search)
-      );
-
-    rendu({ temoignages: resultats, total: resultats.length });
+    let res = tousLesDonnees;
+    if (filtreProduit !== 'Tous') res = res.filter(t => t.produit === filtreProduit);
+    if (type !== 'Tous')         res = res.filter(t => t.type === type);
+    if (format !== 'Tous')       res = res.filter(t => t.format === format);
+    if (search) res = res.filter(t =>
+      t.prenom.toLowerCase().includes(search) ||
+      t.details.toLowerCase().includes(search) ||
+      t.resultats.toLowerCase().includes(search)
+    );
+    renduTemo(res);
   }
 
-  // ── RENDU
-  function rendu(data) {
+  function renduTemo(items) {
     const grid = document.getElementById('grid');
-    const { temoignages, total } = data;
-
-    document.getElementById('countBadge').innerHTML =
-      `<strong>${total}</strong> témoignage${total > 1 ? 's' : ''}`;
-
-    afficherStats(temoignages);
-
-    if (!temoignages || temoignages.length === 0) {
-      grid.innerHTML = `<div class="empty">
-        <div class="empty-icon">🔍</div>
-        <h3>Aucun témoignage trouvé</h3>
-        <p>Essaie de modifier les filtres ou ajoute un nouveau témoignage.</p>
-      </div>`;
+    document.getElementById('countBadge').innerHTML = '<strong>' + items.length + '</strong> témoignage' + (items.length > 1 ? 's' : '');
+    afficherStatsTemo(items);
+    if (!items.length) {
+      grid.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><h3>Aucun témoignage trouvé</h3><p>Essaie de modifier les filtres.</p></div>';
       return;
     }
-
-    grid.innerHTML = temoignages.map(t => carteHTML(t)).join('');
+    grid.innerHTML = items.map(t => carteTemoHTML(t)).join('');
   }
 
-  function afficherStats(temoignages) {
+  function afficherStatsTemo(items) {
     const bar = document.getElementById('statsBar');
-    if (!temoignages || temoignages.length === 0) { bar.innerHTML = ''; return; }
-
-    const nbVideo = temoignages.filter(t => t.format === 'Vidéo').length;
-    const nbEcrit = temoignages.filter(t => t.format === 'Écrit').length;
-    const types   = {};
-    temoignages.forEach(t => { if(t.type) types[t.type] = (types[t.type]||0)+1; });
-    const topType = Object.entries(types).sort((a,b)=>b[1]-a[1])[0];
-
-    bar.innerHTML = `
-      <div class="stat-chip"><span class="dot" style="background:#8B5CF6"></span><strong>${temoignages.length}</strong> total</div>
-      <div class="stat-chip"><span class="dot" style="background:#8B5CF6"></span><strong>${nbVideo}</strong> vidéos</div>
-      <div class="stat-chip"><span class="dot" style="background:#34D399"></span><strong>${nbEcrit}</strong> écrits</div>
-      ${topType ? `<div class="stat-chip"><span class="dot" style="background:#A78BFA"></span><strong>${topType[1]}</strong> ${topType[0]}</div>` : ''}
-    `;
+    if (!items.length) { bar.innerHTML = ''; return; }
+    const nbV = items.filter(t => t.format === 'Vidéo').length;
+    const nbE = items.filter(t => t.format === 'Écrit').length;
+    const types = {};
+    items.forEach(t => { if(t.type) types[t.type] = (types[t.type]||0)+1; });
+    const top = Object.entries(types).sort((a,b)=>b[1]-a[1])[0];
+    bar.innerHTML =
+      '<div class="stat-chip"><span class="dot" style="background:#8B5CF6"></span><strong>' + items.length + '</strong> total</div>' +
+      '<div class="stat-chip"><span class="dot" style="background:#8B5CF6"></span><strong>' + nbV + '</strong> vidéos</div>' +
+      '<div class="stat-chip"><span class="dot" style="background:#34D399"></span><strong>' + nbE + '</strong> écrits</div>' +
+      (top ? '<div class="stat-chip"><span class="dot" style="background:#A78BFA"></span><strong>' + top[1] + '</strong> ' + top[0] + '</div>' : '');
   }
 
-  function carteHTML(t) {
-    const color    = PRODUIT_COLORS[t.produit] || '#8B5CF6';
-    const initiale = t.prenom ? t.prenom.charAt(0).toUpperCase() : '?';
-    const lienV    = t.lienVideo  ? `<a class="link-btn link-btn-video" href="${t.lienVideo}" target="_blank">▶ Vidéo</a>` : '';
-    const lienS    = t.lienScreen ? `<a class="link-btn link-btn-screen" href="${t.lienScreen}" target="_blank">🖼 Screen</a>` : '';
-    const badgeF   = t.format === 'Vidéo'
-      ? '<span class="badge badge-video">Vidéo</span>'
-      : '<span class="badge badge-ecrit">Écrit</span>';
-    const badgeT   = t.type ? `<span class="badge badge-type">${t.type}</span>` : '';
+  function carteTemoHTML(t) {
+    const color = PRODUIT_COLORS[t.produit] || '#8B5CF6';
+    const init  = t.prenom ? t.prenom.charAt(0).toUpperCase() : '?';
+    const lienV = t.lienVideo  ? '<a class="link-btn link-btn-video" href="' + t.lienVideo + '" target="_blank">▶ Vidéo</a>' : '';
+    const lienS = t.lienScreen ? '<a class="link-btn link-btn-screen" href="' + t.lienScreen + '" target="_blank">🖼 Screen</a>' : '';
+    const badgeF = t.format === 'Vidéo' ? '<span class="badge badge-video">Vidéo</span>' : '<span class="badge badge-ecrit">Écrit</span>';
+    const badgeT = t.type ? '<span class="badge badge-type">' + t.type + '</span>' : '';
+    return '<div class="card">' +
+      '<div style="position:absolute;top:0;left:0;right:0;height:3px;background:' + color + ';border-radius:14px 14px 0 0"></div>' +
+      '<div class="card-header">' +
+        '<div style="display:flex;align-items:center;gap:12px">' +
+          '<div class="avatar" style="background:' + color + '22;color:' + color + '">' + init + '</div>' +
+          '<div><div class="card-name">' + (t.prenom||'—') + '</div>' +
+          '<div class="card-produit" style="color:' + color + '">' + (t.produit||'') + '</div></div>' +
+        '</div>' +
+        '<div class="card-badges">' + badgeF + badgeT + '</div>' +
+      '</div>' +
+      (t.resultats ? '<div class="card-resultats">✦ ' + t.resultats + '</div>' : '') +
+      (t.details   ? '<div class="card-details">"' + t.details + '"</div>' : '') +
+      '<div class="card-footer"><span class="card-date">' + (t.date||'') + '</span>' +
+      '<div class="card-links">' + lienV + lienS + '</div></div></div>';
+  }
 
-    return `<div class="card">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${color};border-radius:14px 14px 0 0"></div>
-      <div class="card-header">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div class="avatar" style="background:${color}22;color:${color}">${initiale}</div>
-          <div>
-            <div class="card-name">${t.prenom || '—'}</div>
-            <div class="card-produit" style="color:${color}">${t.produit || ''}</div>
-          </div>
-        </div>
-        <div class="card-badges">${badgeF}${badgeT}</div>
-      </div>
-      ${t.resultats ? `<div class="card-resultats">✦ ${t.resultats}</div>` : ''}
-      ${t.details   ? `<div class="card-details">"${t.details}"</div>` : ''}
-      <div class="card-footer">
-        <span class="card-date">${t.date || ''}</span>
-        <div class="card-links">${lienV}${lienS}</div>
-      </div>
-    </div>`;
+  // ── NURTURING
+  function chargerNurturing() {
+    fetch(SHEET_URL_NURT)
+      .then(r => r.text())
+      .then(text => {
+        const json = JSON.parse(text.replace(/^[^(]+\(/, '').replace(/\);\s*$/, ''));
+        const rows = json.table.rows || [];
+        donneesNurt = rows.map(r => ({
+          titre      : cellVal(r, 0),
+          type       : cellVal(r, 1),
+          theme      : cellVal(r, 2),
+          programmes : cellVal(r, 3),
+          lien       : cellVal(r, 4),
+          details    : cellVal(r, 5),
+        })).filter(n => n.titre && n.titre.trim() !== '');
+      })
+      .catch(() => {});
+  }
+
+  function filtrerProgramme(prog, el) {
+    filtreProgramme = prog;
+    document.querySelectorAll('#navListeProgrammes .nav-item').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    afficherFiltresNurt();
+  }
+
+  function debounceSearchNurt() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(afficherFiltresNurt, 200);
+  }
+
+  function afficherFiltresNurt() {
+    const type   = document.getElementById('filterTypeNurt').value;
+    const search = document.getElementById('searchNurt').value.trim().toLowerCase();
+    let res = donneesNurt;
+    if (filtreProgramme !== 'Tous') res = res.filter(n => n.programmes.includes(filtreProgramme));
+    if (type !== 'Tous')            res = res.filter(n => n.type === type);
+    if (search) res = res.filter(n =>
+      n.titre.toLowerCase().includes(search) ||
+      n.theme.toLowerCase().includes(search) ||
+      n.details.toLowerCase().includes(search)
+    );
+    renduNurt(res);
+  }
+
+  function renduNurt(items) {
+    const grid = document.getElementById('grid');
+    document.getElementById('countBadgeNurt').innerHTML = '<strong>' + items.length + '</strong> contenu' + (items.length > 1 ? 's' : '');
+    afficherStatsNurt(items);
+    if (!items.length) {
+      grid.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><h3>Aucun contenu trouvé</h3><p>Essaie de modifier les filtres.</p></div>';
+      return;
+    }
+    grid.innerHTML = items.map(n => carteNurtHTML(n)).join('');
+  }
+
+  function afficherStatsNurt(items) {
+    const bar = document.getElementById('statsBar');
+    if (!items.length) { bar.innerHTML = ''; return; }
+    const types = {};
+    items.forEach(n => { if(n.type) types[n.type] = (types[n.type]||0)+1; });
+    bar.innerHTML = '<div class="stat-chip"><span class="dot" style="background:#8B5CF6"></span><strong>' + items.length + '</strong> total</div>' +
+      Object.entries(types).map(([k,v]) =>
+        '<div class="stat-chip"><span class="dot" style="background:#A78BFA"></span><strong>' + v + '</strong> ' + k + '</div>'
+      ).join('');
+  }
+
+  function carteNurtHTML(n) {
+    const icon  = TYPE_NURT_ICONS[n.type] || '📌';
+    const progs = n.programmes ? n.programmes.split(',').map(p => p.trim()).filter(Boolean) : [];
+    const badges = progs.map(p => {
+      const c = PRODUIT_COLORS[p] || '#8B5CF6';
+      return '<span class="badge" style="background:' + c + '22;color:' + c + '">' + p + '</span>';
+    }).join('');
+    const lien = n.lien ? '<a class="link-btn link-btn-video" href="' + n.lien + '" target="_blank">🔗 Ouvrir</a>' : '';
+    return '<div class="card">' +
+      '<div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);border-radius:14px 14px 0 0"></div>' +
+      '<div class="card-header">' +
+        '<div style="display:flex;align-items:center;gap:12px">' +
+          '<div class="avatar" style="background:var(--accent)22;color:var(--accent);font-size:20px">' + icon + '</div>' +
+          '<div><div class="card-name">' + (n.titre||'—') + '</div>' +
+          '<div class="card-produit" style="color:var(--muted)">' + (n.theme||'') + '</div></div>' +
+        '</div>' +
+        '<div class="card-badges"><span class="badge badge-type">' + (n.type||'') + '</span></div>' +
+      '</div>' +
+      (badges ? '<div style="display:flex;flex-wrap:wrap;gap:4px;margin:10px 0">' + badges + '</div>' : '') +
+      (n.details ? '<div class="card-details">' + n.details + '</div>' : '') +
+      '<div class="card-footer"><span class="card-date"></span>' +
+      '<div class="card-links">' + lien + '</div></div></div>';
+  }
+
+  // ── UTILITAIRES
+  function cellVal(row, idx) {
+    if (!row.c || !row.c[idx] || row.c[idx].v === null) return '';
+    return String(row.c[idx].v).trim();
   }
 
   // ── MODAL
@@ -952,8 +1083,7 @@
   }
   function fermerModal() {
     document.getElementById('modalOverlay').classList.remove('open');
-    ['f_prenom','f_produit','f_type','f_format','f_lienVideo',
-     'f_lienScreen','f_resultats','f_details','f_ajoutePar']
+    ['f_prenom','f_produit','f_type','f_format','f_lienVideo','f_lienScreen','f_resultats','f_details','f_ajoutePar']
       .forEach(id => { document.getElementById(id).value = ''; });
   }
 
@@ -962,12 +1092,9 @@
     const produit = document.getElementById('f_produit').value;
     const type    = document.getElementById('f_type').value;
     const format  = document.getElementById('f_format').value;
-
     if (!prenom || !produit || !type || !format) {
-      toast('Remplis les champs obligatoires (Prénom, Produit, Type, Format)', 'error');
-      return;
+      toast('Remplis les champs obligatoires', 'error'); return;
     }
-
     const data = {
       prenom, produit, type, format,
       lienVideo  : document.getElementById('f_lienVideo').value.trim(),
@@ -976,22 +1103,16 @@
       details    : document.getElementById('f_details').value.trim(),
       ajoutePar  : document.getElementById('f_ajoutePar').value.trim() || 'App Web',
     };
-
     const btn = document.getElementById('btnSubmit');
-    btn.disabled    = true;
-    btn.textContent = 'Enregistrement...';
-
+    btn.disabled = true; btn.textContent = 'Enregistrement...';
     google.script.run
       .withSuccessHandler(() => {
-        fermerModal();
-        btn.disabled    = false;
-        btn.textContent = 'Ajouter le témoignage';
-        toast(`✓ Témoignage de ${prenom} ajouté !`, 'success');
-        setTimeout(charger, 1500); // petit délai pour que le sheet soit à jour
+        fermerModal(); btn.disabled = false; btn.textContent = 'Ajouter le témoignage';
+        toast('✓ Témoignage de ' + prenom + ' ajouté !', 'success');
+        setTimeout(() => { chargerTemoignages(); }, 1500);
       })
       .withFailureHandler(err => {
-        btn.disabled    = false;
-        btn.textContent = 'Ajouter le témoignage';
+        btn.disabled = false; btn.textContent = 'Ajouter le témoignage';
         toast('Erreur : ' + err.message, 'error');
       })
       .addTemoignage(data);
@@ -1000,35 +1121,27 @@
   // ── SCAN DRIVE
   function lancerScan() {
     const btn = document.getElementById('btnScan');
-    btn.disabled  = true;
+    btn.disabled = true;
     btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px"></div> Scan...';
-
     google.script.run
       .withSuccessHandler(res => {
-        btn.disabled  = false;
-        btn.innerHTML = '🔄 Scanner Drive';
-        if (res.erreurs && res.erreurs.length > 0) {
-          toast('⚠️ Config manquante pour certains dossiers', 'error');
-        } else if (res.total === 0) {
-          toast('Aucun nouveau fichier détecté', 'info');
-        } else {
-          toast(`✓ ${res.total} nouveau(x) témoignage(s) importé(s) !`, 'success');
-          setTimeout(charger, 1500);
-        }
+        btn.disabled = false; btn.innerHTML = '🔄 Scanner Drive';
+        if (res.total === 0) toast('Aucun nouveau fichier détecté', 'info');
+        else { toast('✓ ' + res.total + ' nouveau(x) importé(s) !', 'success'); setTimeout(chargerTemoignages, 1500); }
       })
       .withFailureHandler(err => {
-        btn.disabled  = false;
-        btn.innerHTML = '🔄 Scanner Drive';
-        toast('Erreur scan : ' + err.message, 'error');
+        btn.disabled = false; btn.innerHTML = '🔄 Scanner Drive';
+        toast('Erreur : ' + err.message, 'error');
       })
       .scannerDrive();
   }
 
   // ── TOAST
-  function toast(msg, type = 'success') {
-    const el   = document.getElementById('toast');
+  function toast(msg, type) {
+    type = type || 'success';
+    const el = document.getElementById('toast');
     el.textContent = msg;
-    el.className   = `toast ${type} show`;
+    el.className = 'toast ' + type + ' show';
     clearTimeout(el._t);
     el._t = setTimeout(() => el.classList.remove('show'), 3500);
   }
